@@ -1,6 +1,8 @@
 import { Slot } from "expo-router";
 import "@/styles/global.css";
-import { View, StatusBar } from "react-native";
+import "@/utils/dayjsLocaleConfig";
+
+import { View, StatusBar, KeyboardAvoidingView, Platform } from "react-native";
 
 import {
   useFonts,
@@ -26,6 +28,7 @@ export default function Layout() {
         backgroundColor={"transparant"}
         translucent
       />
+
       <Slot />
     </View>
   );

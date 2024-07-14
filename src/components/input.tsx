@@ -1,5 +1,12 @@
 import { ReactNode } from "react";
-import { TextInput, TextInputProps, View, Platform } from "react-native";
+import {
+  TextInput,
+  TextInputProps,
+  View,
+  Platform,
+  ScrollView,
+  KeyboardAvoidingView,
+} from "react-native";
 import clsx from "clsx";
 
 import { colors } from "@/styles/colors";
