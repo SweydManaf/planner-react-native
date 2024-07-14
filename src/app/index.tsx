@@ -11,7 +11,7 @@ import {
 } from "lucide-react-native";
 import { colors } from "@/styles/colors";
 import { Button } from "@/components/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal } from "@/components/modal";
 import { Calendar } from "@/components/calendar";
 import { calendarUtils, DatesSelected } from "@/utils/calendarUtils";
@@ -24,6 +24,7 @@ import { router } from "expo-router";
 import { tripServer } from "@/server/trip-server";
 
 import Constants from "expo-constants";
+import { Loading } from "@/components/loading";
 
 enum StepForm {
   TRIP_DETAILS = 1,
@@ -39,6 +40,7 @@ enum MODAL {
 export default function Index() {
   // LOADING
   const [isCreatingTrip, setIsCreatingTrip] = useState(false);
+  const [isGettingTrip, setIsGettingTrip] = useState(true);
 
   // DATA
   const [stepForm, setStepForm] = useState(StepForm.TRIP_DETAILS);
@@ -149,6 +151,33 @@ export default function Index() {
       console.error(error);
       setIsCreatingTrip(false);
     }
+  }
+
+  async function getTrip() {
+    try {
+      const tripID = await tripStorage.get();
+
+      if (!tripID) {
+        return setIsGettingTrip(false);
+      }
+
+      const trip = await tripServer.getById(tripID);
+
+      if (trip) {
+        return router.navigate("/trip/" + trip.id);
+      }
+    } catch (error) {
+      setIsGettingTrip(false);
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    getTrip();
+  }, []);
+
+  if (isGettingTrip) {
+    return <Loading />;
   }
 
   return (
