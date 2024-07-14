@@ -2,7 +2,13 @@ import { Slot } from "expo-router";
 import "@/styles/global.css";
 import "@/utils/dayjsLocaleConfig";
 
-import { View, StatusBar, KeyboardAvoidingView, Platform } from "react-native";
+import {
+  View,
+  StatusBar,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from "react-native";
 
 import {
   useFonts,

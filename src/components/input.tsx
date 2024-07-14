@@ -6,6 +6,7 @@ import {
   Platform,
   ScrollView,
   KeyboardAvoidingView,
+  ViewProps,
 } from "react-native";
 import clsx from "clsx";
 
@@ -13,19 +14,29 @@ import { colors } from "@/styles/colors";
 
 type Variants = "primary" | "secondary" | "tertiary";
 
-type InputProps = {
+type InputProps = ViewProps & {
   children: ReactNode;
   variant?: Variants;
 };
 
-export function Input({ children, variant = "primary" }: InputProps) {
+export function Input({
+  children,
+  variant = "primary",
+  className,
+  ...props
+}: InputProps) {
   return (
     <View
-      className={clsx("w-full h-16 flex-row items-center gap-2", {
-        "h-14 px-4 rounded-lg border border-zinc-800": variant !== "primary",
-        "bg-zinc-950": variant === "secondary",
-        "bg-zinc-900": variant === "tertiary",
-      })}
+      className={clsx(
+        "min-h-16 h-16 max-h-16 flex-row items-center gap-2",
+        {
+          "h-14 px-4 rounded-lg border border-zinc-800": variant !== "primary",
+          "bg-zinc-950": variant === "secondary",
+          "bg-zinc-900": variant === "tertiary",
+        },
+        className
+      )}
+      {...props}
     >
       {children}
     </View>
