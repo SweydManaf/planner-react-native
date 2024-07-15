@@ -10,6 +10,8 @@ import { Alert, FlatList } from "react-native";
 import { Text, View } from "react-native";
 
 import { TripLink, TripLinkProps } from "@/components/tripLink";
+import { participantsServer } from "@/server/participants-server";
+import { Participant, ParticipantProps } from "@/components/participant";
 
 export function Details({ tripId }: { tripId: string }) {
   // MODAL
@@ -21,6 +23,7 @@ export function Details({ tripId }: { tripId: string }) {
 
   // LISTS
   const [links, setLinks] = useState<TripLinkProps[]>([]);
+  const [participants, setParticipants] = useState<ParticipantProps[]>([]);
 
   // LOADING
   const [isCreatingLinkTrip, setIsCreatingLinkTrip] = useState(false);
@@ -69,8 +72,18 @@ export function Details({ tripId }: { tripId: string }) {
     }
   }
 
+  async function getTripParticipants() {
+    try {
+      const participants = await participantsServer.getByTripId(tripId);
+      setParticipants(participants);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   useEffect(() => {
     getTripLinks();
+    getTripParticipants();
   }, []);
 
   return (
@@ -103,6 +116,20 @@ export function Details({ tripId }: { tripId: string }) {
         <Text className="text-zinc-50 text-2xl font-semibold my-6">
           Convidados
         </Text>
+
+        {participants.length > 0 ? (
+          <FlatList
+            data={participants}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => <Participant data={item} />}
+            contentContainerClassName="gap-4 pb-44"
+            showsVerticalScrollIndicator={false}
+          />
+        ) : (
+          <Text className="text-zinc-400 font-regular text-base mt-2 mb-6">
+            Nenhum participante adicionado.
+          </Text>
+        )}
       </View>
 
       <Modal
